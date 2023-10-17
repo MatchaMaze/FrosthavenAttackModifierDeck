@@ -130,6 +130,7 @@ class ModDeck:
     def __init__(self):
         self.Deck = []
         self.Discard = []
+        self.NeedShuffle = False
 
         self.classOptions = []
         self.perksOptions = []
@@ -317,6 +318,8 @@ class ModDeck:
     def drawCard(self):
         combined_card = Card()
         card = random.choice(self.Deck)
+        if card == self.CardCrit or card == self.CardMiss:
+            self.NeedShuffle = True
         self.Deck.remove(card)
         if not card.OneUse:
             self.Discard.append(card)
@@ -324,6 +327,8 @@ class ModDeck:
         while card.Roll:
             card = random.choice(self.Deck)
             self.Deck.remove(card)
+            if card == self.CardCrit or card == self.CardMiss:
+                self.NeedShuffle = True
             if not card.OneUse:
                 self.Discard.append(card)
             combined_card += card
@@ -391,6 +396,12 @@ class ModDeck:
         if len(perk['remove']) > 0:
             return f"Remove {self.NumToText(len(perk['remove']))} {perk['remove'][0]}"
 
+    def discard_deck_size(self):
+        return len(self.Discard)
+
+    def active_deck_size(self):
+        return len(self.Deck)
+
     def blessingAction(self):
         self.addCard(self.CardCrit.copy().set_one_use())
 
@@ -399,14 +410,11 @@ class ModDeck:
 
     def shuffleAction(self):
         self.ShuffleDeck()
-        print(f"Deck Shuffled")
-        print(f"Number of cards in deck: {len(self.Deck)}")
+        self.NeedShuffle = False
 
     def drawCardAction(self):
         text = f"Damage roll:\n"
         text += f"{self.drawCard()}"
-        text += "\n"
-        text += f"Number of cards in deck: {len(self.Deck)}"
         return text
 
     def draw2CardAction(self):
@@ -415,6 +423,4 @@ class ModDeck:
         text += "\n"
         text += f"Damage roll 2:\n"
         text += f"{self.drawCard()}"
-        text += f"\n"
-        text += f"Number of cards in deck: {len(self.Deck)}"
         return text

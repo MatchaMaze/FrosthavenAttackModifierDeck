@@ -1,6 +1,18 @@
 import streamlit as st
 from frosthavenattckmoddeck import ModDeck
 
+st.markdown('<style>'
+            '[data-testid="stHorizontalBlock"],'
+            '[data-testid="stExpander"]'
+            '{'
+            'border-style: solid;'
+            'border-color: rgba(250, 250, 250, 1);'
+            'border-radius: 0.5rem;'
+            'border-width: 1px;'
+            'padding: 5px;'
+            '}'
+            '</style>', unsafe_allow_html=True)
+
 if 'modDeck' not in st.session_state:
     st.session_state['modDeck'] = ModDeck()
 modDeck = st.session_state['modDeck']
@@ -61,15 +73,22 @@ if option is not None:
                                           kwargs={"id": index, "perk": perk})
             index += 1
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.button("Draw Card", on_click=draw_card)
-        st.button("Draw 2 Cards", on_click=draw_2_card)
-    with col2:
-        st.button("Shuffle", on_click=shuffle)
-        st.button("Bless", on_click=add_blessing)
-        st.button("Curse", on_click=add_curse)
+    with st.expander("Special Actions"):
+        col1, col2, col3 = st.columns(3)
+        col1.button("Bless", on_click=add_blessing)
+        col2.button("Curse", on_click=add_curse)
+    with st.container():
+        col7, col8, col9 = st.columns(3)
+        col7.write(f"Deck size: {modDeck.active_deck_size()}")
+        col8.write(f"Discard size: {modDeck.discard_deck_size()}")
+        col9.write(f"Need shuffle: {modDeck.NeedShuffle}")
+    with st.container():
+        col4, col5, col6 = st.columns(3)
+        col4.button("Draw Card", on_click=draw_card)
+        col5.button("Draw 2 Cards", on_click=draw_2_card)
+        col6.button("Shuffle", on_click=shuffle)
 
 if resultText is not None:
-    st.text(resultText)
+    col10 = st.columns(1)
+    col10[0].text(resultText)
     st.session_state['resultText'] = None
