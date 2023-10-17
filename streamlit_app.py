@@ -81,7 +81,7 @@ if option is not None:
         col7, col8, col9 = st.columns(3)
         col7.write(f"Deck size: {modDeck.active_deck_size()}")
         col8.write(f"Discard size: {modDeck.discard_deck_size()}")
-        col9.write(f"Need shuffle: {modDeck.NeedShuffle}")
+        col9.write(f"Need shuffle: {'Yes' if modDeck.NeedShuffle else 'No'}")
     with st.container():
         col4, col5, col6 = st.columns(3)
         col4.button("Draw Card", on_click=draw_card)
