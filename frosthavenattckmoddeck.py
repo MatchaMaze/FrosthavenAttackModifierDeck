@@ -338,6 +338,7 @@ class ModDeck:
     # @title
     def InitDeck(self):
         self.Deck.clear()
+        self.Discard.clear()
         self.addCard(self.CardCrit)
         self.addCard(self.CardMiss)
         self.addCard(self.CardMin2)
@@ -356,6 +357,7 @@ class ModDeck:
         if x == self.currentClass:
             return
         self.InitDeck()
+        self.NeedShuffle = False
         self.currentClass = x
         self.perksSelection = dict()
         #for i in range(len(self.Classes[currentClass]["perks"])):
